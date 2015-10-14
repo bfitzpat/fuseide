@@ -97,6 +97,17 @@ public class ModelViewer extends Composite {
      * @param manager
      * @param parent
      * @param rootModel
+     */
+    public ModelViewer(final TransformationManager manager,
+            final Composite parent,
+            final Model rootModel) {
+        this(manager, parent, rootModel, null, null);
+    }
+    
+    /**
+     * @param manager
+     * @param parent
+     * @param rootModel
      * @param potentialDropTargets
      * @param preferenceId
      */
