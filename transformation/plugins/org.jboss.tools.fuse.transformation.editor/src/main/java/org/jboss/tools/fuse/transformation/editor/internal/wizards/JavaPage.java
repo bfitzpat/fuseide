@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.jboss.tools.fuse.transformation.editor.internal.wizards;
 
+import java.net.URLClassLoader;
+
 import org.eclipse.core.databinding.Binding;
 import org.eclipse.core.databinding.UpdateValueStrategy;
 import org.eclipse.core.databinding.beans.BeanProperties;
@@ -57,6 +59,7 @@ import org.eclipse.ui.progress.UIJob;
 import org.jboss.tools.fuse.transformation.editor.Activator;
 import org.jboss.tools.fuse.transformation.editor.internal.ModelViewer;
 import org.jboss.tools.fuse.transformation.editor.wizards.NewTransformationWizard;
+import org.jboss.tools.fuse.transformation.editor.wizards.ReloadTransformationWizard;
 import org.jboss.tools.fuse.transformation.core.model.ModelBuilder;
 
 /**
@@ -154,9 +157,16 @@ public class JavaPage extends XformWizardPage implements TransformationTypePage 
                         UIJob uiJob = new UIJob("open error") {
                             @Override
                             public IStatus runInUIThread(IProgressMonitor monitor) {
-                                NewTransformationWizard wizard = (NewTransformationWizard) getWizard();
+                                URLClassLoader loader = null;
+                                if (getWizard() instanceof NewTransformationWizard) {
+                                    NewTransformationWizard wizard = (NewTransformationWizard) getWizard();
+                                    loader = wizard.getLoader();
+                                } else if (getWizard() instanceof ReloadTransformationWizard) {
+                                    ReloadTransformationWizard wizard = (ReloadTransformationWizard) getWizard();
+                                    loader = wizard.getLoader();
+                                }
                                 try {
-                                    Class<?> tempClass = wizard.getLoader().loadClass(inner.getFullyQualifiedName());
+                                    Class<?> tempClass = loader.loadClass(inner.getFullyQualifiedName());
                                     _javaModel = ModelBuilder.fromJavaClass(tempClass);
                                     _modelViewer.setModel(_javaModel);
                                 } catch (ClassNotFoundException e) {

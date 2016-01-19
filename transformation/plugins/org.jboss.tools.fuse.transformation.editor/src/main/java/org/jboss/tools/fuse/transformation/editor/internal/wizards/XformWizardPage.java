@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.jboss.tools.fuse.transformation.editor.wizards.NewTransformationWizard;
+import org.jboss.tools.fuse.transformation.editor.wizards.ReloadTransformationWizard;
 
 /**
  * @author brianf
@@ -72,8 +73,13 @@ public abstract class XformWizardPage extends WizardPage {
     public IWizardPage getNextPage() {
         if (this instanceof StartPage) {
             return getSourcePage();
+        } else if (this instanceof ReloadTypePage) {
+            return getSourcePage();
         } else if (this instanceof TransformationTypePage) {
             return ((TransformationTypePage)this).isSourcePage() ? getTargetPage() : null;
+        } else if (this instanceof TransformationTypePage && getWizard() instanceof ReloadTransformationWizard) {
+            ReloadTransformationWizard wizard = (ReloadTransformationWizard) getWizard();
+            return ((TransformationTypePage)this).isSourcePage() ? wizard.getFinalPage() : null;
         }
         return super.getNextPage();
     }
@@ -136,12 +142,17 @@ public abstract class XformWizardPage extends WizardPage {
 
         // if this is the source page that changed, let's refresh the target
         // page too
-        NewTransformationWizard wizard = (NewTransformationWizard) getWizard();
-        StartPage startPage = (StartPage) wizard.getStartingPage();
-        XformWizardPage pageToRefresh = null;
-        if (startPage != null && startPage.getSourcePage() != null && startPage.getSourcePage().equals(this)) {
-            pageToRefresh = (XformWizardPage) startPage.getTargetPage();
-            pageToRefresh.pingBinding();
+        if (getWizard() instanceof NewTransformationWizard) {
+            NewTransformationWizard wizard = (NewTransformationWizard) getWizard();
+            StartPage startPage = (StartPage) wizard.getStartingPage();
+            XformWizardPage pageToRefresh = null;
+            if (startPage != null && startPage.getSourcePage() != null && startPage.getSourcePage().equals(this)) {
+                pageToRefresh = (XformWizardPage) startPage.getTargetPage();
+                pageToRefresh.pingBinding();
+            }
+        } else if (getWizard() instanceof ReloadTransformationWizard) {
+            //ReloadTransformationWizard wizard = (ReloadTransformationWizard) getWizard();
+            // do something
         }
     }
 
