@@ -47,6 +47,19 @@ public class StyleUtil {
 	public static final IColorConstant EIP_FIGURE_BACKGROUND_COLOR = getColorConstant("240,171,0"); 
 	// constants for the new design end here
 	
+	// constants for arrow shapes start here
+	public static final int IMAGE_DEFAULT_HEIGHT = 34;
+	public static final int FIGURE_MAX_WIDTH = 200;
+
+    /* Points and bezier offsets for the large right arrow. */
+    public static final int[][] LARGE_RIGHT_ARROW = new int[][] {{0, 0, 75, 0, 100, 25, 75, 50, 0, 50, 15, 25, 0, 0 },
+    	{3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 } };
+    public static final int[][] LARGE_RIGHT_ARROW2 = new int[][] {{0, 0, (int) (FIGURE_MAX_WIDTH * .75), 0, FIGURE_MAX_WIDTH, IMAGE_DEFAULT_HEIGHT/2, (int) (FIGURE_MAX_WIDTH * .75), IMAGE_DEFAULT_HEIGHT, 0, IMAGE_DEFAULT_HEIGHT, (int) (FIGURE_MAX_WIDTH * .15), IMAGE_DEFAULT_HEIGHT/2, 0, 0 },
+      	{3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 } };
+    public static final int LARGE_RIGHT_ARROW_WIDTH = 100;
+    public static final int LARGE_RIGHT_ARROW_HEIGHT = 75;
+    // constants for arrow shapes stop here
+	
 	public static final AdaptedGradientColoredAreas E_CLASS_GRADIENT = PredefinedColoredAreas.getBlueWhiteGlossAdaptions();
 
 	public static final String DEFAULT_FONT = "Liberation Sans";
