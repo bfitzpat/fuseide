@@ -45,6 +45,7 @@ public class ImageProvider extends AbstractImageProvider {
 	public static final String IMG_DELETE_BP = PREFIX + "delete_bp"; //$NON-NLS-1$
 	public static final String IMG_PROPERTIES_BP = PREFIX + "properties_bp"; //$NON-NLS-1$
 	public static final String IMG_UP_NAV = PREFIX + "up_nav"; //$NON-NLS-1$
+    public static final String IMG_PROPERTIES = PREFIX + "properties"; //$NON-NLS-1$
 	
 	// outline
 	/**
@@ -76,6 +77,8 @@ public class ImageProvider extends AbstractImageProvider {
 		addToImageRegistry(IMG_DELETE_BP, ROOT_FOLDER_FOR_IMG + "delete_bp.png"); //$NON-NLS-1$
 		addImage(IMG_PROPERTIES_BP, ROOT_FOLDER_FOR_IMG + "properties_bp.png"); //$NON-NLS-1$
 		addToImageRegistry(IMG_PROPERTIES_BP, ROOT_FOLDER_FOR_IMG + "properties_bp.png"); //$NON-NLS-1$
+		addImage(IMG_PROPERTIES, ROOT_FOLDER_FOR_IMG + "properties.gif"); //$NON-NLS-1$
+		addToImageRegistry(IMG_PROPERTIES, ROOT_FOLDER_FOR_IMG + "properties.gif"); //$NON-NLS-1$
 		
 		addImage(IMG_FLOW, ROOT_FOLDER_FOR_IMG + "flow16.png"); //$NON-NLS-1$
 		addToImageRegistry(IMG_FLOW, ROOT_FOLDER_FOR_IMG + "flow16.png"); //$NON-NLS-1$

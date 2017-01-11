@@ -55,6 +55,7 @@ import org.fusesource.ide.camel.editor.features.custom.SetEndpointBreakpointFeat
 import org.fusesource.ide.camel.editor.features.delete.DeleteFigureFeature;
 import org.fusesource.ide.camel.editor.features.delete.RemoveFigureFeature;
 import org.fusesource.ide.camel.editor.features.misc.MoveNodeFeature;
+import org.fusesource.ide.camel.editor.features.misc.PropertiesDialogFeature;
 import org.fusesource.ide.camel.editor.features.misc.ReconnectNodesFeature;
 import org.fusesource.ide.camel.editor.features.misc.ResizeNodeFeature;
 import org.fusesource.ide.camel.editor.features.misc.UpdateNodeFeature;
@@ -190,7 +191,8 @@ public class CamelFeatureProvider extends DefaultFeatureProvider {
 //				new GEFLayoutDiagramFeature(this),
 //				new ZestLayoutDiagramFeature(this),
 				new CollapseFeature(this),
-				new GoIntoContainerFeature(this)
+				new GoIntoContainerFeature(this),
+				new PropertiesDialogFeature(this)
 				};
 	}
 

@@ -67,6 +67,7 @@ import org.fusesource.ide.camel.editor.features.custom.DeleteAllEndpointBreakpoi
 import org.fusesource.ide.camel.editor.features.custom.DoubleClickFeature;
 import org.fusesource.ide.camel.editor.features.custom.GoIntoContainerFeature;
 import org.fusesource.ide.camel.editor.features.custom.SetEndpointBreakpointFeature;
+import org.fusesource.ide.camel.editor.features.misc.PropertiesDialogFeature;
 import org.fusesource.ide.camel.editor.internal.CamelEditorUIActivator;
 import org.fusesource.ide.camel.editor.internal.UIMessages;
 import org.fusesource.ide.camel.editor.provider.ext.ICustomPaletteEntry;
@@ -229,8 +230,25 @@ public class ToolBehaviourProvider extends DefaultToolBehaviorProvider {
 						goIntoButton.setIconId(ImageProvider.IMG_UP_NAV);
 					}
 					
-					data.getGenericContextButtons().add(goIntoButton);					
+					data.getGenericContextButtons().add(goIntoButton);
 				}
+			} else if (f instanceof PropertiesDialogFeature && f.canExecute(cc)) {
+				String image = ImageProvider.IMG_PROPERTIES;
+				String text = "Properties";
+
+				String name = "";
+				if (bo instanceof AbstractCamelModelElement) {
+					AbstractCamelModelElement bo2 = (AbstractCamelModelElement) bo;
+					if (bo2 != null && bo2.getName() != null) {
+						name = bo2.getName();
+					}
+				}
+
+				IContextButtonEntry propertiesButton = new ContextButtonEntry(f, cc);
+				propertiesButton.setDescription(text + " for " + name);
+				propertiesButton.setText(text);
+				propertiesButton.setIconId(image);
+				data.getGenericContextButtons().add(propertiesButton);					
 			}
 		}
 
