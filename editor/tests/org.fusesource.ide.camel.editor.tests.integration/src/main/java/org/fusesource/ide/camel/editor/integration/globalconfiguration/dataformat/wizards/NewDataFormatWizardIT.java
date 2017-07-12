@@ -104,7 +104,7 @@ public class NewDataFormatWizardIT {
 		CamelModel camelModel = CamelModelFactory.getModelForVersion(camelVersion, CamelModelFactory.RUNTIME_PROVIDER_KARAF);
 
 		NewDataFormatWizard newDataFormatWizard = new NewDataFormatWizard(camelFile, camelModel.getDataformatModel());
-		Element dataFormatNode = newDataFormatWizard.createDataFormatNode(dataFormat, id);
+		Element dataFormatNode = newDataFormatWizard.createDataFormatNode(dataFormat, id, new NullProgressMonitor());
 		new CamelGlobalConfigEditor(null).addDataFormat(camelFile, dataFormatNode);
 		
 		// Check that element just created has been correctly initialized

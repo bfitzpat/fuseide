@@ -116,6 +116,31 @@ public class MavenUtils {
 	}
 
 	/**
+	 * Instead of creating a separate progress dialog, use the incoming one.
+	 * Useful for wizards.
+	 * 
+	 * @param compDeps
+	 * @param project
+	 * @param monitor
+	 * @throws CoreException
+	 * @throws InvocationTargetException
+	 * @throws InterruptedException
+	 */
+	public void updateMavenDependenciesWithMonitor(final List<org.fusesource.ide.camel.model.service.core.catalog.Dependency> compDeps, IProject project, IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
+		if (compDeps == null || compDeps.isEmpty()) {
+			CamelEditorUIActivator.pluginLog()
+					.logWarning("Unable to add component dependencies because no dependencies were specified.");
+			return;
+		}
+		monitor.subTask(UIMessages.updatePomDependenciesProgressDialogLabel);
+		try {
+			internalUpdateMavenDependencies(compDeps, project);
+		} catch (CoreException ex) {
+			CamelEditorUIActivator.pluginLog().logError(ex);
+		}
+	}
+
+	/**
 	 * @param compDeps
 	 * @param project
 	 * @throws CoreException
