@@ -168,6 +168,33 @@ public class UIMessages extends NLS {
 	public static String loadingCamelFile;
 	public static String pending;
 
+	public static String editorPreferencePageTechPreviewRESTEditorPageSetting;
+
+	public static String RestConfigEditorBindingModeLabel;
+
+	public static String RestConfigEditorComponentLabel;
+
+	public static String RestConfigEditorConfigurationTab;
+
+	public static String RestConfigEditorContextPathLabel;
+
+	public static String RestConfigEditorHostLabel;
+
+	public static String RestConfigEditorOperationsTab;
+
+	public static String RestConfigEditorPortLabel;
+
+	public static String RestConfigEditorRestConfigSectionLabelText;
+
+	public static String RestConfigEditorRestConfigurationTabDescription;
+
+	public static String RestConfigEditorRestOperationTabDescription;
+
+	public static String RestConfigEditorRestSectionLabel;
+
+	public static String RestConfigEditorRestSectionLabelText;
+
+	public static String RestConfigEditorRestTabDescription;
 
 	static {
 		// initialize resource bundle
