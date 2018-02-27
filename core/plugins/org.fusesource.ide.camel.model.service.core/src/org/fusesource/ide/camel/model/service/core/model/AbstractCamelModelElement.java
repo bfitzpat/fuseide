@@ -57,13 +57,20 @@ public abstract class AbstractCamelModelElement {
 	public static final String PROPERTY_KEY_OLD_ID = "OLD_ID";
 	public static final String PROPERTY_KEY_NEW_ID = "NEW_ID";
 	public static final String PROPERTY_KEY_CAMEL_FILE = "CAMEL_FILE";
-	
+
 	public static final String PARAMETER_LANGUAGENAME = "languageName";
 	
 	public static final String CHOICE_NODE_NAME = "choice";
 	public static final String WHEN_NODE_NAME = "when";
 	public static final String OTHERWISE_NODE_NAME = "otherwise";
 	public static final String WIRETAP_NODE_NAME = "wireTap";
+
+	public static final String USER_LABEL_COMPONENT_REGEX = "[\\w-]+";
+	public static final String USER_LABEL_PARAMETER_REGEX = USER_LABEL_COMPONENT_REGEX; // these expressions may be changed in the future
+	public static final String USER_LABEL_REGEX = USER_LABEL_COMPONENT_REGEX + "\\." + USER_LABEL_PARAMETER_REGEX;
+	public static final String USER_LABEL_DELIMETER = ";";
+
+
 	public static final String ROUTE_NODE_NAME = "route";
 	public static final String ID_ATTRIBUTE = "id";
 	public static final String ROUTE_ATTRIBUTE = "route";
@@ -393,7 +400,7 @@ public abstract class AbstractCamelModelElement {
 	 * @return
 	 */
 	public String getDisplayText() {
-		return getDisplayText(true);
+		return getDisplayText(false);
 	}
 
 	/**
@@ -404,22 +411,9 @@ public abstract class AbstractCamelModelElement {
 	public final String getDisplayText(boolean useID) {
 		String result = String.format("%s ", Strings.capitalize(getNodeTypeId()));
 
-		// honor the PREFER_ID_AS_LABEL preference
-		// we initially set it to the value of the contains method
-		boolean preferID = false;
-		if (useID) {
-			preferID = PreferenceManager.getInstance()
-					.containsPreference(PreferencesConstants.EDITOR_PREFER_ID_AS_LABEL);
-			// as second step if the value is there, we use it for the flag
-			if (PreferenceManager.getInstance().containsPreference(PreferencesConstants.EDITOR_PREFER_ID_AS_LABEL)) {
-				preferID = PreferenceManager.getInstance()
-						.loadPreferenceAsBoolean(PreferencesConstants.EDITOR_PREFER_ID_AS_LABEL);
-			}
-		}
-
 		// we only return the id if we are told so by the preference AND the
 		// value of the ID is set != null
-		if (preferID && getId() != null && getId().trim().length() > 0) {
+		if (useID && getId() != null && getId().trim().length() > 0) {
 			result += getId();
 			return result;
 		}
@@ -457,9 +451,27 @@ public abstract class AbstractCamelModelElement {
 		singlePropertyDisplay.put("sort", NODE_KIND_EXPRESSION);
 		singlePropertyDisplay.put(WHEN_NODE_NAME, NODE_KIND_EXPRESSION);
 
+		// User defined labels
+		if (PreferenceManager.getInstance().containsPreference(PreferencesConstants.EDITOR_PREFERRED_LABEL)) {
+			String userProperties = PreferenceManager.getInstance()
+					.loadPreferenceAsString(PreferencesConstants.EDITOR_PREFERRED_LABEL);
+			String[] userLabels = userProperties.split(USER_LABEL_DELIMETER);
+			for (String userLabel : userLabels) {
+				if (userLabel.matches(USER_LABEL_REGEX)) {
+					String[] parts = userLabel.split("\\.");
+					singlePropertyDisplay.put(parts[0], parts[1]);
+				}
+			}
+		}
+
 		String propertyToCheck = singlePropertyDisplay.get(eipType);
 		if( propertyToCheck != null ) {
 			Object propVal = getParameter(propertyToCheck);
+			if (propVal == null) {
+				// try to get the default value
+				Parameter param = getUnderlyingMetaModelObject().getProperties().get(propertyToCheck);
+				propVal = param == null ? null : param.getDefaultValue();
+			}
 			if (propVal != null) {
 				if( propVal instanceof AbstractCamelModelElement) {
 					// seems to be an expression

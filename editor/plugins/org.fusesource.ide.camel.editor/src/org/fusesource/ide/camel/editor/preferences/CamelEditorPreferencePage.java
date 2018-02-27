@@ -25,7 +25,6 @@ import org.fusesource.ide.camel.model.service.core.util.LanguageUtils;
 import org.fusesource.ide.preferences.PreferenceManager;
 import org.fusesource.ide.preferences.PreferencesConstants;
 
-
 /**
  * This class represents a preference page that
  * is contributed to the Preferences dialog. By
@@ -58,13 +57,6 @@ implements IWorkbenchPreferencePage, IWorkbenchPropertyPage {
 
 		addField(defaultLanguageEditor);
 
-		BooleanFieldEditor preferIdAsLabelEditor = new BooleanFieldEditor(
-				PreferencesConstants.EDITOR_PREFER_ID_AS_LABEL,
-				UIMessages.editorPreferencePagePreferIdAsLabelSetting,
-				getFieldEditorParent());
-
-		addField(preferIdAsLabelEditor);
-
 		namesAndValues = new String[][] {
 				{ UIMessages.editorPreferencePageLayoutOrientationEAST,  String.valueOf(PositionConstants.EAST) },
 				{ UIMessages.editorPreferencePageLayoutOrientationSOUTH, String.valueOf(PositionConstants.SOUTH) }
@@ -84,7 +76,12 @@ implements IWorkbenchPreferencePage, IWorkbenchPropertyPage {
 
 		addField(gridVisibilityEditor);
 
-		BooleanFieldEditor restPageVisibilityEditor = new BooleanFieldEditor(
+  PreferredLabelEditor userLabelsEditor = new PreferredLabelEditor(PreferencesConstants.EDITOR_PREFERRED_LABEL,
+				UIMessages.editorPreferencePageUserLabels, getFieldEditorParent());
+
+		addField(userLabelsEditor);
+
+  BooleanFieldEditor restPageVisibilityEditor = new BooleanFieldEditor(
 				PreferencesConstants.EDITOR_SHOW_REST_PAGE,
 				UIMessages.editorPreferencePageTechPreviewRESTEditorPageSetting,
 				getFieldEditorParent());
@@ -118,3 +115,4 @@ implements IWorkbenchPreferencePage, IWorkbenchPropertyPage {
 	}
 
 }
+
