@@ -31,8 +31,6 @@ import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CTabFolder;
-import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -68,7 +66,7 @@ import org.w3c.dom.Node;
  */
 public class RestConfigEditor extends EditorPart implements ICamelModelListener, ISelectionProvider {
 
-	private HashMap<String, Color> colorMap;
+	private Map<String, Color> colorMap;
 	private CamelEditor parentEditor;
 	private Composite parent;
 	private ScrolledForm form;
@@ -78,9 +76,6 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	private ListenerList<ISelectionChangedListener> listeners = new ListenerList<>();
 	private Object selection;
 	private Control selectedControl;
-	private CTabFolder tabFolder;
-	private CTabItem configurationTab;
-	private CTabItem operationsTab;
 	private Combo componentCombo;
 	private Text contextPathText;
 	private Text portText;
@@ -112,7 +107,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 			throws PartInitException {
 		setSite(editorSite);
 		setInput(input);
-		getSite().setSelectionProvider(this);
+//		getSite().setSelectionProvider(this);
 	}
 
 	@Override
@@ -123,20 +118,6 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	@Override
 	public boolean isSaveAsAllowed() {
 		return false;
-	}
-
-	private void createTabs(Composite parent) {
-		tabFolder = new CTabFolder(parent, SWT.BORDER | SWT.FLAT | SWT.RIGHT);
-		tabFolder.setSimple(false);
-		tabFolder.setLayout(new GridLayout(2, false));
-		tabFolder.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 10));
-		configurationTab = new CTabItem(tabFolder, SWT.NONE);
-		configurationTab.setText(UIMessages.RestConfigEditorConfigurationTab);
-
-		operationsTab = new CTabItem(tabFolder, SWT.NONE);
-		operationsTab.setText(UIMessages.RestConfigEditorOperationsTab);
-		
-		setSelectionBackground();
 	}
 
 	private void createColors() {
@@ -203,18 +184,16 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 		toolkit = new FormToolkit(Display.getDefault());
 
 		createColors();
-		createTabs(parent);
-		
-		createRestConfigurationTabSection();
-		
-		form = toolkit.createScrolledForm(tabFolder);
+
+		form = toolkit.createScrolledForm(parent);
 		form.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 10));
 		form.getBody().setLayout(new GridLayout(2, false));
+		
+		createRestConfigurationTabSection();
 		
 		createRestTabSection();
 		restOpsSection = createRestOperationTabSection();
 
-		operationsTab.setControl(form);
 		form.layout();
 		toolkit.decorateFormHeading(form.getForm());
 	}
@@ -405,9 +384,9 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	}
 	
 	private Composite createRestTabSection() {
-		Section section = toolkit.createSection(form.getBody(), Section.EXPANDED | Section.TITLE_BAR | Section.DESCRIPTION);
-		section.setText(UIMessages.RestConfigEditorRestSectionLabelText);
-		section.setDescription(UIMessages.RestConfigEditorRestTabDescription);
+		Section section = toolkit.createSection(form.getBody(), Section.EXPANDED | Section.TWISTIE | Section.TITLE_BAR | Section.DESCRIPTION);
+		section.setText(UIMessages.restConfigEditorRestSectionLabelText);
+		section.setDescription(UIMessages.restConfigEditorRestTabDescription);
 		section.setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(1, 5).create());
 		section.setLayout(new GridLayout(2, false));
 
@@ -421,7 +400,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 		
 		restList = new ListViewer(client, SWT.V_SCROLL | SWT.SINGLE | SWT.BORDER);
 		restList.getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).span(1, 5).create());
-		restList.setContentProvider(new ArrayContentProvider());
+		restList.setContentProvider(ArrayContentProvider.getInstance());
 		restList.setLabelProvider(new RestLabelProvider());
 		restList.addSelectionChangedListener(event -> {
 			if (event.getStructuredSelection().getFirstElement() instanceof Element) {
@@ -451,9 +430,9 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	}
 	
 	private Composite createRestOperationTabSection() {
-		Section section = toolkit.createSection(form.getBody(), Section.EXPANDED | Section.TITLE_BAR | Section.DESCRIPTION);
-		section.setText(UIMessages.RestConfigEditorRestSectionLabel);
-		section.setDescription(UIMessages.RestConfigEditorRestOperationTabDescription);
+		Section section = toolkit.createSection(form.getBody(), Section.EXPANDED | Section.TWISTIE | Section.TITLE_BAR | Section.DESCRIPTION);
+		section.setText(UIMessages.restConfigEditorRestSectionLabel);
+		section.setDescription(UIMessages.restConfigEditorRestOperationTabDescription);
 		GridData gd = new GridData(SWT.FILL,SWT.FILL,true,true);
 		section.setLayoutData(gd);
 		section.setLayout(new GridLayout(2, false));
@@ -487,10 +466,10 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	}
 
 	private Composite createRestConfigurationTabSection() {
-		Section section = toolkit.createSection(tabFolder, Section.EXPANDED | Section.TITLE_BAR | Section.DESCRIPTION);
-		section.setText(UIMessages.RestConfigEditorRestConfigSectionLabelText);
-		section.setDescription(UIMessages.RestConfigEditorRestConfigurationTabDescription);
-		GridData gd = new GridData(SWT.FILL,SWT.FILL,true,false);
+		Section section = toolkit.createSection(form.getBody(), Section.EXPANDED | Section.TWISTIE | Section.TITLE_BAR | Section.DESCRIPTION);
+		section.setText(UIMessages.restConfigEditorRestConfigSectionLabelText);
+		section.setDescription(UIMessages.restConfigEditorRestConfigurationTabDescription);
+		GridData gd = GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create();
 		section.setLayoutData(gd);
 		section.setLayout(new GridLayout(2, false));
 
@@ -501,7 +480,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 		client.setLayout(new GridLayout(2, false));
 		client.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		
-		toolkit.createLabel(client, UIMessages.RestConfigEditorComponentLabel);
+		toolkit.createLabel(client, UIMessages.restConfigEditorComponentLabel);
 		componentCombo = new Combo(client, SWT.DROP_DOWN);
 		componentCombo.add("netty-http"); //$NON-NLS-1$
 		componentCombo.add("netty4-http"); //$NON-NLS-1$
@@ -513,17 +492,17 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 		componentCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		componentCombo.setEnabled(false);
 		
-		toolkit.createLabel(client, UIMessages.RestConfigEditorContextPathLabel);
+		toolkit.createLabel(client, UIMessages.restConfigEditorContextPathLabel);
 		contextPathText = toolkit.createText(client, "", SWT.BORDER); //$NON-NLS-1$
 		contextPathText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		contextPathText.setEnabled(false);
 		
-		toolkit.createLabel(client, UIMessages.RestConfigEditorPortLabel);
+		toolkit.createLabel(client, UIMessages.restConfigEditorPortLabel);
 		portText = toolkit.createText(client, "", SWT.BORDER); //$NON-NLS-1$
 		portText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		portText.setEnabled(false);
 
-		toolkit.createLabel(client, UIMessages.RestConfigEditorBindingModeLabel);
+		toolkit.createLabel(client, UIMessages.restConfigEditorBindingModeLabel);
 		bindingModeCombo = new Combo(client, SWT.DROP_DOWN);
 		bindingModeCombo.add("auto"); //$NON-NLS-1$
 		bindingModeCombo.add("json"); //$NON-NLS-1$
@@ -534,23 +513,16 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 		bindingModeCombo.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		bindingModeCombo.setEnabled(false);
 
-		toolkit.createLabel(client, UIMessages.RestConfigEditorHostLabel);
+		toolkit.createLabel(client, UIMessages.restConfigEditorHostLabel);
 		hostText = toolkit.createText(client, "", SWT.BORDER); //$NON-NLS-1$
 		hostText.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		hostText.setEnabled(false);
 		
 		section.setClient(client);
-		configurationTab.setControl(section);
 		
 		return client;
 	}
 
-	public void setSelectionBackground() {
-		Display display = Display.getCurrent();
-		tabFolder.setBackground(display.getSystemColor(SWT.COLOR_WHITE));
-		tabFolder.setSelectionBackground(display.getSystemColor(SWT.COLOR_GRAY));
-	}
-	
 	private void buildModel() {
 		CamelFile cf = parentEditor.getDesignEditor().getModel();
 		model = new RestModelBuilder().build(cf);
@@ -563,8 +535,8 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 				Control child = children[i];
 				child.dispose();
 			}
+			restOpsSection.layout();
 		}
-		form.layout();
 	}
 
 	private String getAttrValue(Element element, String attrName) {
@@ -578,6 +550,12 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	}
 	
 	private void refreshRestConfigurationSection() {
+		componentCombo.setText("");
+		bindingModeCombo.setText("");
+		portText.setText("");
+		contextPathText.setText("");
+		hostText.setText("");
+		
 		if (!getModel().get(RestConfigConstants.REST_CONFIGURATION_TAG).isEmpty()) {
 			Element restConfig = (Element) getModel().get(RestConfigConstants.REST_CONFIGURATION_TAG).get(0);
 			
@@ -612,20 +590,19 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	}
 	
 	private void refreshRestSection() {
-		clearUI();
+		restList.setInput(null);
 		if (!getModel().get(RestConfigConstants.REST_TAG).isEmpty()) {
 			restList.setInput(getModel().get(RestConfigConstants.REST_TAG));
-			restList.refresh();
 			restList.setSelection(new StructuredSelection(restList.getElementAt(0)), true);
 		}
 	}	
 	
 	public void reload() {
 		buildModel();
-		clearUI();
 		refreshRestConfigurationSection();
+		clearUI();
 		refreshRestSection();
-		form.layout();
+		form.layout(true);
 		toolkit.decorateFormHeading(form.getForm());
 	}
 
@@ -646,7 +623,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 		if (selection != null) {
 			return new StructuredSelection(selection);
 		}
-		return null;
+		return StructuredSelection.EMPTY;
 	}
 
 	@Override

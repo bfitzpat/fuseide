@@ -58,8 +58,8 @@ implements IWorkbenchPreferencePage, IWorkbenchPropertyPage {
 		addField(defaultLanguageEditor);
 
 		namesAndValues = new String[][] {
-				{ UIMessages.editorPreferencePageLayoutOrientationEAST,  String.valueOf(PositionConstants.EAST) },
-				{ UIMessages.editorPreferencePageLayoutOrientationSOUTH, String.valueOf(PositionConstants.SOUTH) }
+			{ UIMessages.editorPreferencePageLayoutOrientationEAST,  String.valueOf(PositionConstants.EAST) },
+			{ UIMessages.editorPreferencePageLayoutOrientationSOUTH, String.valueOf(PositionConstants.SOUTH) }
 		};
 
 		ComboFieldEditor layoutOrientationEditor = new ComboFieldEditor(
@@ -76,12 +76,12 @@ implements IWorkbenchPreferencePage, IWorkbenchPropertyPage {
 
 		addField(gridVisibilityEditor);
 
-  PreferredLabelEditor userLabelsEditor = new PreferredLabelEditor(PreferencesConstants.EDITOR_PREFERRED_LABEL,
+		PreferredLabelEditor userLabelsEditor = new PreferredLabelEditor(PreferencesConstants.EDITOR_PREFERRED_LABEL,
 				UIMessages.editorPreferencePageUserLabels, getFieldEditorParent());
 
 		addField(userLabelsEditor);
 
-  BooleanFieldEditor restPageVisibilityEditor = new BooleanFieldEditor(
+		BooleanFieldEditor restPageVisibilityEditor = new BooleanFieldEditor(
 				PreferencesConstants.EDITOR_SHOW_REST_PAGE,
 				UIMessages.editorPreferencePageTechPreviewRESTEditorPageSetting,
 				getFieldEditorParent());

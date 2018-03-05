@@ -170,32 +170,19 @@ public class UIMessages extends NLS {
 	public static String pending;
 
 	public static String editorPreferencePageTechPreviewRESTEditorPageSetting;
-
-	public static String RestConfigEditorBindingModeLabel;
-
-	public static String RestConfigEditorComponentLabel;
-
-	public static String RestConfigEditorConfigurationTab;
-
-	public static String RestConfigEditorContextPathLabel;
-
-	public static String RestConfigEditorHostLabel;
-
-	public static String RestConfigEditorOperationsTab;
-
-	public static String RestConfigEditorPortLabel;
-
-	public static String RestConfigEditorRestConfigSectionLabelText;
-
-	public static String RestConfigEditorRestConfigurationTabDescription;
-
-	public static String RestConfigEditorRestOperationTabDescription;
-
-	public static String RestConfigEditorRestSectionLabel;
-
-	public static String RestConfigEditorRestSectionLabelText;
-
-	public static String RestConfigEditorRestTabDescription;
+	public static String restConfigEditorBindingModeLabel;
+	public static String restConfigEditorComponentLabel;
+	public static String restConfigEditorConfigurationTab;
+	public static String restConfigEditorContextPathLabel;
+	public static String restConfigEditorHostLabel;
+	public static String restConfigEditorOperationsTab;
+	public static String restConfigEditorPortLabel;
+	public static String restConfigEditorRestConfigSectionLabelText;
+	public static String restConfigEditorRestConfigurationTabDescription;
+	public static String restConfigEditorRestOperationTabDescription;
+	public static String restConfigEditorRestSectionLabel;
+	public static String restConfigEditorRestSectionLabelText;
+	public static String restConfigEditorRestTabDescription;
 
   /* Preferred Labels */	
 	public static String preferredLabelsNewDialogTitle;
