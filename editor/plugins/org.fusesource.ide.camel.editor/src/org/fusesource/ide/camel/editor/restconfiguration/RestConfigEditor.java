@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.fusesource.ide.camel.editor.restconfiguration;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -43,8 +43,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
@@ -62,7 +62,6 @@ import org.fusesource.ide.camel.model.service.core.model.ICamelModelListener;
 import org.fusesource.ide.foundation.core.util.Strings;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 /**
  * @author bfitzpat
@@ -74,7 +73,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	private Composite parent;
 	private ScrolledForm form;
 	private FormToolkit toolkit;
-	private HashMap<String, ArrayList<Object>> model;
+	private Map<String, List<Object>> model;
 	private ImageRegistry mImageRegistry;	
 	private ListenerList<ISelectionChangedListener> listeners = new ListenerList<>();
 	private Object selection;
@@ -553,29 +552,8 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	}
 	
 	private void buildModel() {
-		model = new HashMap<>();
-		getModel().put(RestConfigConstants.REST_CONFIGURATION_TAG, new ArrayList<Object>());
-		getModel().put(RestConfigConstants.REST_TAG, new ArrayList<Object>());
 		CamelFile cf = parentEditor.getDesignEditor().getModel();
-		if (cf != null && cf.getRouteContainer() != null) {
-			Node node = cf.getRouteContainer().getXmlNode();
-			if (node instanceof Element) {
-				NodeList configlist = ((Element) node).getElementsByTagName(RestConfigConstants.REST_CONFIGURATION_TAG);
-				if (configlist != null && configlist.getLength() > 0) {
-					for (int i=0; i < configlist.getLength(); i++) {
-						Element config = (Element) configlist.item(i);
-						getModel().get(RestConfigConstants.REST_CONFIGURATION_TAG).add(config);
-					}
-				}
-				NodeList restlist = ((Element) node).getElementsByTagName(RestConfigConstants.REST_TAG);
-				if (restlist != null && restlist.getLength() > 0) {
-					for (int i=0; i < restlist.getLength(); i++) {
-						Element config = (Element) restlist.item(i);
-						getModel().get(RestConfigConstants.REST_TAG).add(config);
-					}
-				}
-			}
-		}
+		model = new RestModelBuilder().build(cf);
 	}
 
 	private void clearUI() {
@@ -654,7 +632,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	/**
 	 * @return the model
 	 */
-	public Map<String, ArrayList<Object>> getModel() {
+	public Map<String, List<Object>> getModel() {
 		return model;
 	}
 
