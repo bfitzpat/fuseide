@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.fusesource.ide.camel.editor.restconfiguration;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +65,6 @@ import org.w3c.dom.Node;
  */
 public class RestConfigEditor extends EditorPart implements ICamelModelListener, ISelectionProvider {
 
-	private Map<String, Color> colorMap;
 	private CamelEditor parentEditor;
 	private Composite parent;
 	private ScrolledForm form;
@@ -83,6 +81,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	private Text hostText;
 	private Composite restOpsSection;
 	private ListViewer restList;
+	private RestEditorColorManager colorManager = new RestEditorColorManager();
 
 	/**
 	 *
@@ -120,27 +119,6 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 		return false;
 	}
 
-	private void createColors() {
-		colorMap = new HashMap<>();
-		colorMap.put(RestConfigConstants.REST_COLOR_LIGHT_BLUE, new Color(Display.getDefault(), 235, 242, 250));
-		colorMap.put(RestConfigConstants.REST_COLOR_LIGHT_ORANGE, new Color(Display.getDefault(), 250, 241, 230));
-		colorMap.put(RestConfigConstants.REST_COLOR_LIGHT_GREEN, new Color(Display.getDefault(), 232, 245, 239));
-		colorMap.put(RestConfigConstants.REST_COLOR_LIGHT_GREY, new Color(Display.getDefault(), 240, 248, 255));
-		colorMap.put(RestConfigConstants.REST_COLOR_LIGHT_RED, new Color(Display.getDefault(), 250, 231, 231));
-		colorMap.put(RestConfigConstants.REST_COLOR_DARK_BLUE, new Color(Display.getDefault(), 93, 173, 255));
-		colorMap.put(RestConfigConstants.REST_COLOR_DARK_ORANGE, new Color(Display.getDefault(), 254, 162, 24));
-		colorMap.put(RestConfigConstants.REST_COLOR_DARK_GREEN, new Color(Display.getDefault(), 65, 205, 142));
-		colorMap.put(RestConfigConstants.REST_COLOR_DARK_RED, new Color(Display.getDefault(), 252, 60, 55));
-	}
-
-	private void destroyColors() {
-		if (!colorMap.isEmpty()) {
-			for (Color color : colorMap.values()) {
-				color.dispose();
-			}
-		}
-	}
-
 	@Override
 	public void createPartControl(Composite p) {
 		getImages();
@@ -165,7 +143,6 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 		if (parentEditor != null && parentEditor.getDesignEditor() != null && parentEditor.getDesignEditor().getModel() != null) {
 			parentEditor.getDesignEditor().getModel().removeModelListener(this);
 		}
-		destroyColors();
 		mImageRegistry.dispose();
 		super.dispose();
 	}
@@ -183,8 +160,6 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	private void createContents() {
 		toolkit = new FormToolkit(Display.getDefault());
 
-		createColors();
-
 		form = toolkit.createScrolledForm(parent);
 		form.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, true, 1, 10));
 		form.getBody().setLayout(new GridLayout(2, false));
@@ -198,45 +173,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 		toolkit.decorateFormHeading(form.getForm());
 	}
 	
-	private Color getBackgroundColorForType(String tag) {
-		if (RestConfigConstants.GET_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_LIGHT_BLUE);
-		}
-		if (RestConfigConstants.PUT_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_LIGHT_GREEN);
-		}
-		if (RestConfigConstants.POST_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_LIGHT_ORANGE);
-		}
-		if (RestConfigConstants.DELETE_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_LIGHT_RED);
-		}
-		return colorMap.get(RestConfigConstants.REST_COLOR_LIGHT_GREY);
-	}		
-
-	private Color getForegroundColorForType(String tag) {
-		Color foregroundColor = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
-		if (RestConfigConstants.PUT_VERB.equals(tag)) {
-			foregroundColor = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
-		}
-		return foregroundColor;
-	}		
-
-	private Color getImageColorForType(String tag) {
-		if (RestConfigConstants.GET_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_DARK_BLUE);
-		}
-		if (RestConfigConstants.PUT_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_DARK_GREEN);
-		}
-		if (RestConfigConstants.POST_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_DARK_ORANGE);
-		}
-		if (RestConfigConstants.DELETE_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_DARK_RED);
-		}
-		return Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
-	}
+	
 
 	private String compareTextAndTag(String text, String tag) {
 		if (text == null || tag == null) {
@@ -266,15 +203,15 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 	
 	private Composite createVerbComposite(Composite parent, String labelText, String content) {
 		Composite client=toolkit.createComposite(parent,SWT.BORDER);
-		client.setBackground(colorMap.get(RestConfigConstants.REST_COLOR_LIGHT_BLUE));
+		client.setBackground(colorManager.get(RestConfigConstants.REST_COLOR_LIGHT_BLUE));
 		client.setLayout(new GridLayout(2, false));
 		GridData gd = GridDataFactory.fillDefaults().grab(true, false).span(2, 1).create();
 		client.setLayoutData(gd);
 
 		String graphicLabel = getTextForImage(labelText);
-		Color imageColor = getImageColorForType(graphicLabel);
-		Color backgroundColor = getBackgroundColorForType(graphicLabel);
-		Color foregroundColor = getForegroundColorForType(graphicLabel);
+		Color imageColor = colorManager.getImageColorForType(graphicLabel);
+		Color backgroundColor = colorManager.getBackgroundColorForType(graphicLabel);
+		Color foregroundColor = colorManager.getForegroundColorForType(graphicLabel);
 		client.setBackground(backgroundColor);
 		client.addListener(SWT.MouseDown, new RestVerbSelectionListener());
 
@@ -654,9 +591,9 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 		private void updateSelectionDisplay(Control oldControl, Control newControl) {
 			if (oldControl != null && getDataFromSelectedUIElement(oldControl) != null) {
 				CamelBasicModelElement node = (CamelBasicModelElement) getDataFromSelectedUIElement(oldControl);
-				Color background = getBackgroundColorForType(""); //$NON-NLS-1$
+				Color background = colorManager.getBackgroundColorForType(""); //$NON-NLS-1$
 				if (node != null && node.getXmlNode() != null) {
-					background = getBackgroundColorForType(node.getXmlNode().getNodeName());
+					background = colorManager.getBackgroundColorForType(node.getXmlNode().getNodeName());
 				}
 				updateBorder(oldControl, background);
 			}
