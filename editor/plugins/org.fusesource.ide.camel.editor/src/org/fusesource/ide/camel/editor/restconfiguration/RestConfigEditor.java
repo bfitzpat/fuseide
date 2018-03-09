@@ -107,7 +107,8 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 			throws PartInitException {
 		setSite(editorSite);
 		setInput(input);
-//		getSite().setSelectionProvider(this);
+		getSite().setSelectionProvider(this);
+		setSelection(StructuredSelection.EMPTY);
 	}
 
 	@Override
@@ -407,7 +408,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 				clearUI();
 				
 				Element restElement = (Element) event.getStructuredSelection().getFirstElement();
-				setSelection(new StructuredSelection(new CamelBasicModelElement(null, restElement)));
+				//setSelection(new StructuredSelection(new CamelBasicModelElement(null, restElement)));
 				
 				if (restElement.getChildNodes().getLength() > 0) {
 					for (int i = 0; i < restElement.getChildNodes().getLength(); i++) {
@@ -604,6 +605,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 		refreshRestSection();
 		form.layout(true);
 		toolkit.decorateFormHeading(form.getForm());
+		setSelection(StructuredSelection.EMPTY);
 	}
 
 	/**
@@ -620,9 +622,9 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 
 	@Override
 	public ISelection getSelection() {
-		if (selection != null) {
-			return new StructuredSelection(selection);
-		}
+//		if (selection != null) {
+//			return new StructuredSelection(selection);
+//		}
 		return StructuredSelection.EMPTY;
 	}
 
@@ -647,7 +649,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 			selectedControl = newControl;
 			selection = getDataFromSelectedUIElement(newControl);
 			if (selection != null) {
-				setSelection(new StructuredSelection(selection));
+				//setSelection(new StructuredSelection(selection));
 			}
 		}
 
