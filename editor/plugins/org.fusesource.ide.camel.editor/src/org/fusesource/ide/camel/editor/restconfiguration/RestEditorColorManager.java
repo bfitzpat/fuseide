@@ -20,6 +20,8 @@ import org.eclipse.swt.widgets.Display;
 public class RestEditorColorManager {
 	
 	private static Map<String, Color> colorMap = new HashMap<>();
+	private static Map<String, String> verbToBackgroundColorMap = new HashMap<>();
+	private static Map<String, String> verbToImageColorMap = new HashMap<>();
 	
 	static {
 		Display display = Display.getDefault();
@@ -32,46 +34,33 @@ public class RestEditorColorManager {
 		colorMap.put(RestConfigConstants.REST_COLOR_DARK_ORANGE, new Color(display, 254, 162, 24));
 		colorMap.put(RestConfigConstants.REST_COLOR_DARK_GREEN, new Color(display, 65, 205, 142));
 		colorMap.put(RestConfigConstants.REST_COLOR_DARK_RED, new Color(display, 252, 60, 55));
+		
+		verbToBackgroundColorMap.put(RestConfigConstants.GET_VERB,    RestConfigConstants.REST_COLOR_LIGHT_BLUE);
+		verbToBackgroundColorMap.put(RestConfigConstants.PUT_VERB,    RestConfigConstants.REST_COLOR_LIGHT_GREEN);
+		verbToBackgroundColorMap.put(RestConfigConstants.POST_VERB,   RestConfigConstants.REST_COLOR_LIGHT_ORANGE);
+		verbToBackgroundColorMap.put(RestConfigConstants.DELETE_VERB, RestConfigConstants.REST_COLOR_LIGHT_RED);
+		
+		verbToImageColorMap.put(RestConfigConstants.GET_VERB,    RestConfigConstants.REST_COLOR_DARK_BLUE);
+		verbToImageColorMap.put(RestConfigConstants.PUT_VERB,    RestConfigConstants.REST_COLOR_DARK_GREEN);
+		verbToImageColorMap.put(RestConfigConstants.POST_VERB,   RestConfigConstants.REST_COLOR_DARK_ORANGE);
+		verbToImageColorMap.put(RestConfigConstants.DELETE_VERB, RestConfigConstants.REST_COLOR_DARK_RED);
+		
 	}
 	
-	Color getBackgroundColorForType(String tag) {
-		if (RestConfigConstants.GET_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_LIGHT_BLUE);
-		}
-		if (RestConfigConstants.PUT_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_LIGHT_GREEN);
-		}
-		if (RestConfigConstants.POST_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_LIGHT_ORANGE);
-		}
-		if (RestConfigConstants.DELETE_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_LIGHT_RED);
-		}
-		return colorMap.get(RestConfigConstants.REST_COLOR_LIGHT_GREY);
+	public Color getBackgroundColorForType(String tag) {
+		return colorMap.get(verbToBackgroundColorMap.getOrDefault(tag, RestConfigConstants.REST_COLOR_LIGHT_GREY));
 	}		
 
-	Color getForegroundColorForType(String tag) {
-		Color foregroundColor = Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
+	public Color getForegroundColorForType(String tag) {
 		if (RestConfigConstants.PUT_VERB.equals(tag)) {
-			foregroundColor = Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
+			return Display.getCurrent().getSystemColor(SWT.COLOR_BLACK);
+		} else {
+			return  Display.getCurrent().getSystemColor(SWT.COLOR_WHITE);
 		}
-		return foregroundColor;
 	}		
 
-	Color getImageColorForType(String tag) {
-		if (RestConfigConstants.GET_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_DARK_BLUE);
-		}
-		if (RestConfigConstants.PUT_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_DARK_GREEN);
-		}
-		if (RestConfigConstants.POST_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_DARK_ORANGE);
-		}
-		if (RestConfigConstants.DELETE_VERB.equals(tag)) {
-			return colorMap.get(RestConfigConstants.REST_COLOR_DARK_RED);
-		}
-		return Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
+	public Color getImageColorForType(String tag) {
+		return colorMap.getOrDefault(verbToImageColorMap.get(tag), Display.getCurrent().getSystemColor(SWT.COLOR_GRAY));
 	}
 
 	/**
