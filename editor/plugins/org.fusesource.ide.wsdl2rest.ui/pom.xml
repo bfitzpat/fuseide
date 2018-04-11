@@ -12,14 +12,6 @@
 	<packaging>eclipse-plugin</packaging>
 	<name>Red Hat Fuse Tooling :: Camel Editor :: Plugins :: Wsdl2Rest UI</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>commons-validator</groupId>
-			<artifactId>commons-validator</artifactId>
-			<version>1.4.0</version>
-		</dependency>
-	</dependencies>
-
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -31,10 +23,16 @@
 						<id>copy</id>
 						<phase>generate-sources</phase>
 						<goals>
-							<goal>copy-dependencies</goal>
+							<goal>copy</goal>
 						</goals>
 						<configuration>
-							<excludeScope>system</excludeScope>
+							<artifactItems>
+								<artifactItem>
+									<groupId>commons-validator</groupId>
+									<artifactId>commons-validator</artifactId>
+									<version>1.6</version>
+								</artifactItem>
+							</artifactItems>
 							<outputDirectory>lib</outputDirectory>
 						</configuration>
 					</execution>
