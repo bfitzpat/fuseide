@@ -29,12 +29,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.m2e.maven.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: lib/commons-validator-1.4.0.jar,
+Bundle-ClassPath: lib/commons-validator-1.6.jar,
  .
-Export-Package: org.apache.commons.validator,
- org.apache.commons.validator.routines,
- org.apache.commons.validator.routines.checkdigit,
- org.apache.commons.validator.util,
- org.fusesource.ide.wsdl2rest.ui.internal,
+Export-Package: org.fusesource.ide.wsdl2rest.ui.internal,
  org.fusesource.ide.wsdl2rest.ui.wizard,
  org.fusesource.ide.wsdl2rest.ui.wizard.pages
