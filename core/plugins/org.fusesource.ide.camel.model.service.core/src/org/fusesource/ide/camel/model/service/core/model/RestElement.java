@@ -10,7 +10,8 @@
  ******************************************************************************/ 
 package org.fusesource.ide.camel.model.service.core.model;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.fusesource.ide.camel.model.service.core.catalog.Parameter;
@@ -26,7 +27,7 @@ import org.w3c.dom.NodeList;
 public class RestElement extends AbstractRestCamelModelElement {
 
 	public static final String REST_TAG = "rest"; //$NON-NLS-1$
-	private Map<String, AbstractCamelModelElement> restOperations = new HashMap<>();
+	private List<RestVerbElement> restOperations = new ArrayList<>();
 
 	/**
 	 * @param parent
@@ -37,14 +38,6 @@ public class RestElement extends AbstractRestCamelModelElement {
 		setUnderlyingMetaModelObject(new RestElementEIP());
 	}
 	
-	public RestElement(String name) {
-		super(null, null);
-		setUnderlyingMetaModelObject(new RestElementEIP());
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.fusesource.ide.camel.model.service.core.model.AbstractCamelModelElement#getKind(java.lang.String)
-	 */
 	@Override
 	public String getKind(String name) {
 		// due to the missing EIP as underlying meta model we have to tell AbstractCamelModelElement what
@@ -52,9 +45,6 @@ public class RestElement extends AbstractRestCamelModelElement {
 		return NODE_KIND_ATTRIBUTE;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.fusesource.ide.camel.model.service.core.model.AbstractCamelModelElement#parseAttributes()
-	 */
 	@Override
 	protected void parseAttributes() {
 		Eip eip = getUnderlyingMetaModelObject();
@@ -82,9 +72,6 @@ public class RestElement extends AbstractRestCamelModelElement {
 		return null;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.fusesource.ide.camel.model.service.core.model.AbstractCamelModelElement#shouldParseNode()
-	 */
 	@Override
 	protected boolean shouldParseNode() {
 		// we do want to parse REST contents
@@ -100,20 +87,17 @@ public class RestElement extends AbstractRestCamelModelElement {
 		for (int i=0; i<children.getLength(); i++) {
 			Node tmp = children.item(i);
 			if (tmp.getNodeType() != Node.ELEMENT_NODE) continue;
-			parseNode(tmp);
+			parseChildNode(tmp);
 		}
 	}
 
-	private void parseNode(Node node) {
+	private void parseChildNode(Node node) {
 		RestVerbElement rve = new RestVerbElement(this, node);
 		rve.initialize();
-		this.restOperations.put(rve.getId(), rve);
+		this.restOperations.add(rve);
 	}
 
-	/**
-	 * @return the restOperations
-	 */
-	public Map<String, AbstractCamelModelElement> getRestOperations() {
+	public List<RestVerbElement> getRestOperations() {
 		return this.restOperations;
 	}
 
@@ -127,7 +111,7 @@ public class RestElement extends AbstractRestCamelModelElement {
 	/**
 	 * @param restOperations the restOperations to set
 	 */
-	public void setRestOperations(Map<String, AbstractCamelModelElement> restOperations) {
+	public void setRestOperations(List<RestVerbElement> restOperations) {
 		this.restOperations = restOperations;
 	}
 	
@@ -136,11 +120,11 @@ public class RestElement extends AbstractRestCamelModelElement {
 	 * 
 	 * @param def
 	 */
-	public void addRestOperation(AbstractCamelModelElement def) {
-		if (restOperations.containsKey(def.getId())) {
+	public void addRestOperation(RestVerbElement def) {
+		if (restOperations.contains(def)) {
 			return;
 		}
-		restOperations.put(def.getId(), def);
+		restOperations.add(def);
 		boolean childExists = false;
 		for (int i=0; i<getXmlNode().getChildNodes().getLength(); i++) {
 			if(def.getXmlNode() != null && getXmlNode().getChildNodes().item(i).isEqualNode(def.getXmlNode())) {
@@ -164,8 +148,8 @@ public class RestElement extends AbstractRestCamelModelElement {
 	 * @param def
 	 */
 	public void removeRestOperation(AbstractCamelModelElement def, RestElement parent) {
-		if (this.restOperations.containsKey(def.getId())) {
-			this.restOperations.remove(def.getId());
+		if (this.restOperations.contains(def)) {
+			this.restOperations.remove(def);
 			boolean childExists = false;
 			for (int i=0; i<getXmlNode().getChildNodes().getLength(); i++) {
 				if(getXmlNode().getChildNodes().item(i).isEqualNode(def.getXmlNode())) {

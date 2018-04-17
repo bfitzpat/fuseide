@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.fusesource.ide.camel.editor.restconfiguration;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -347,9 +346,7 @@ public class RestConfigEditor extends EditorPart implements ICamelModelListener,
 				clearUI();
 				
 				RestElement acme = (RestElement) event.getStructuredSelection().getFirstElement();
-				Iterator<AbstractCamelModelElement> iter = acme.getRestOperations().values().iterator();
-				while (iter.hasNext()) {
-					RestVerbElement rve = (RestVerbElement) iter.next();
+				for (RestVerbElement rve : acme.getRestOperations()) {
 					Element elChild = (Element) rve.getXmlNode();
 					String verbUri = elChild.getAttribute("uri"); //$NON-NLS-1$
 					Composite operation = createVerbComposite(restOpsSection, elChild.getTagName(), verbUri);
