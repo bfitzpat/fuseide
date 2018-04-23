@@ -203,7 +203,7 @@ public abstract class Wsdl2RestWizardBasePage extends WizardPage {
 				};
 			}
 		};
-		dialog.setInitialPattern("*"); //$NON-NLS-1$
+		dialog.setInitialPattern("*.wsdl"); //$NON-NLS-1$
 		if (dialog.open() == FilteredResourcesSelectionDialog.OK) {
 			Object[] result = dialog.getResult();
 			if (result == null || result.length != 1 || !(result[0] instanceof IResource)) {
