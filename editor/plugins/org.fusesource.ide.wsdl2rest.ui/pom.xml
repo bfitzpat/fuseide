@@ -12,4 +12,57 @@
 	<packaging>eclipse-plugin</packaging>
 	<name>Red Hat Fuse Tooling :: Camel Editor :: Plugins :: Wsdl2Rest UI</name>
 
+	<properties>
+		<version.wsdl2rest>11.0.0-SNAPSHOT</version.wsdl2rest>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.fusesource.ide.editor</groupId>
+			<artifactId>org.fusesource.ide.wsdl2rest</artifactId>
+			<version>${version.wsdl2rest}</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>get-deps</id>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<phase>generate-resources</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<stripVersion>true</stripVersion>
+					<skip>false</skip>
+					<excludeScope>test</excludeScope>
+					<outputDirectory>${basedir}/libs/</outputDirectory>
+					<artifactItems>
+						<artifactItem>
+							<groupId>org.fusesource.ide.editor</groupId>
+							<artifactId>org.fusesource.ide.wsdl2rest</artifactId>
+						</artifactItem>
+					</artifactItems>
+				</configuration>
+			</plugin>
+			<plugin>
+				<!-- make sure lib dir is removed after clean to avoid "dirty" build -->
+				<artifactId>maven-clean-plugin</artifactId>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>${basedir}/libs</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
