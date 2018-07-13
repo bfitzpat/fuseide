@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import org.fusesource.ide.camel.model.service.core.catalog.Parameter;
 import org.fusesource.ide.camel.model.service.core.model.AbstractCamelModelElement;
-import org.fusesource.ide.camel.model.service.core.model.CamelFile;
+import org.fusesource.ide.camel.model.service.core.model.CamelContextElement;
 import org.fusesource.ide.camel.model.service.core.model.RestConfigurationElement;
 import org.fusesource.ide.camel.model.service.core.model.RestElement;
 import org.fusesource.ide.foundation.core.util.CamelUtils;
@@ -130,23 +130,23 @@ public class RestConfigUtil {
 		return null;
 	}
 
-	public RestConfigurationElement createRestConfigurationNode(final CamelFile camelFile) {
+	public RestConfigurationElement createRestConfigurationNode(final CamelContextElement ctx) {
 		// get NS prefix from parent document, not route container node
 		final String prefixNS = 
-				getCamelNSPrefix(camelFile.getRouteContainer().getXmlNode().getOwnerDocument().getDocumentElement());
+				getCamelNSPrefix(ctx.getRouteContainer().getXmlNode().getOwnerDocument().getDocumentElement());
 		Node newXMLNode = 
-				camelFile.createElement(RestConfigurationElement.REST_CONFIGURATION_TAG, prefixNS);
-		return new RestConfigurationElement(camelFile, newXMLNode);
+				ctx.createElement(RestConfigurationElement.REST_CONFIGURATION_TAG, prefixNS);
+		return new RestConfigurationElement(ctx, newXMLNode);
 	}
 
-	public RestElement createRestElementNode(final CamelFile camelFile) {
+	public RestElement createRestElementNode(final CamelContextElement ctx) {
 		// get NS prefix from parent document, not route container node
 		final String prefixNS = 
-				getCamelNSPrefix(camelFile.getRouteContainer().getXmlNode().getOwnerDocument().getDocumentElement());
+				getCamelNSPrefix(ctx.getRouteContainer().getXmlNode().getOwnerDocument().getDocumentElement());
 		Node newXMLNode = 
-				camelFile.createElement(RestElement.REST_TAG, prefixNS);
+				ctx.createElement(RestElement.REST_TAG, prefixNS);
 		String id = computeId(newXMLNode);
-		RestElement restElement = new RestElement(camelFile, newXMLNode);
+		RestElement restElement = new RestElement(ctx, newXMLNode);
 		restElement.setId(id);
 		return restElement;
 	}

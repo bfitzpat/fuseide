@@ -16,6 +16,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorPart;
 import org.fusesource.ide.camel.editor.CamelDesignEditor;
 import org.fusesource.ide.camel.editor.CamelEditor;
+import org.fusesource.ide.camel.editor.restconfiguration.actions.AddRestElementAction;
+import org.fusesource.ide.camel.editor.restconfiguration.actions.DeleteRestConfigurationAction;
 import org.fusesource.ide.camel.model.service.core.model.CamelContextElement;
 import org.fusesource.ide.camel.model.service.core.model.CamelFile;
 import org.fusesource.ide.camel.model.service.core.model.RestConfigurationElement;
@@ -179,7 +181,7 @@ public class RestEditorTestIT extends AbstractCamelEditorIT {
 		readAndDispatch(20);
 		
 		// add a REST Element
-		restEditor.addRestElement();
+		new AddRestElementAction(restEditor, null).run();
 		readAndDispatch(20);
 
 		// test for new component
@@ -210,8 +212,11 @@ public class RestEditorTestIT extends AbstractCamelEditorIT {
 		CamelContextElement context = (CamelContextElement)model.getRouteContainer();
 
 		//test to make sure it's removed
-		restEditor.removeRestConfigurationElement();
-		readAndDispatch(20);
+		new DeleteRestConfigurationAction(restEditor, null).deleteWithoutUserConfirmation();
+		//check context in rest editor is correct
+		assertThat(restEditor.getCtx().getRestConfigurations().isEmpty()).isNotEqualTo(false);
+		assertThat(restEditor.getCtx().getRestElements().isEmpty()).isNotEqualTo(false);
+		//check that context of the CamelEditor is correct
 		assertThat(context.getRestConfigurations().isEmpty()).isNotEqualTo(false);
 		assertThat(context.getRestElements().isEmpty()).isNotEqualTo(false);
 	}
